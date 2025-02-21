@@ -1,5 +1,6 @@
 #include "opengl-framework/opengl-framework.hpp" // Inclue la librairie qui va nous servir à faire du rendu
 #include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_transform.hpp"
 
 int main()
 {
@@ -45,8 +46,11 @@ int main()
         rectangle_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
         
         glm::mat4 const view_matrix = camera.view_matrix();
-        glm::mat4 const projection_matrix = glm::infinitePerspective(glm::radians(45.f) /*field of view in radians*/, 4.5f /*aspect ratio*/, 3.9f /*near plane*/);
+        glm::mat4 const projection_matrix = glm::infinitePerspective(1.f /*field of view in radians*/, gl::framebuffer_aspect_ratio() /*aspect ratio*/, 0.001f /*near plane*/);
         shader.set_uniform("view_projection_matrix", projection_matrix  * view_matrix);
+        glm::mat4 const rotation = glm::rotate(glm::mat4{1.f}, gl::time_in_seconds() /*angle de la rotation*/, glm::vec3{0.f, 0.f, 1.f} /* axe autour duquel on tourne */);
+        glm::mat4 const translation = glm::translate(glm::mat4{1.f}, glm::vec3{0.f, 1.f, 0.f} /* déplacement */);
+        shader.set_uniform("model_matrix", translation * rotation);
         // Rendu à chaque frame
     }
 }
