@@ -38,12 +38,14 @@ int main()
     {
         glClearColor(0.f, 0.f, 1.f, 1.f); // Choisis la couleur à utiliser. Les paramètres sont R, G, B, A avec des valeurs qui vont de 0 à 1
         glClear(GL_COLOR_BUFFER_BIT); // Exécute concrètement l'action d'appliquer sur tout l'écran la couleur choisie au-dessus
+        
         shader.bind(); // On a besoin qu'un shader soit bind (i.e. "actif") avant de draw(). On en reparle dans la section d'après.
         shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
         shader.set_uniform("time_addition", gl::time_in_seconds());
         rectangle_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
+        
         glm::mat4 const view_matrix = camera.view_matrix();
-        glm::mat4 const projection_matrix = glm::infinitePerspective(1.f /*field of view in radians*/, gl::framebuffer_aspect_ratio() /*aspect ratio*/, 0.001f /*near plane*/);
+        glm::mat4 const projection_matrix = glm::infinitePerspective(glm::radians(45.f) /*field of view in radians*/, 4.5f /*aspect ratio*/, 3.9f /*near plane*/);
         shader.set_uniform("view_projection_matrix", projection_matrix  * view_matrix);
         // Rendu à chaque frame
     }
