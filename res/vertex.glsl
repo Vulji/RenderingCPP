@@ -11,7 +11,7 @@ void main()
     vec2 position = in_position;
     //position += vec2(0.4f*time_addition,0.4f);
 
-    mat4 model_view_projection_matrix =  view_projection_matrix * model_matrix;
+    //mat4 model_view_projection_matrix =  view_projection_matrix * model_matrix;
 
-    gl_Position = model_view_projection_matrix * vec4(in_position, 0., 1.);
+    gl_Position = view_projection_matrix * vec4(in_position, 0., 1.);
 }
