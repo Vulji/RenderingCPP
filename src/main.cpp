@@ -22,54 +22,19 @@ int main()
 }};
    auto const rectangle_mesh = gl::Mesh{{
     .vertex_buffers = {{
-        .layout = {gl::VertexAttribute::Position3D{0}},
+        .layout = {gl::VertexAttribute::Position3D{0},gl::VertexAttribute::UV{1}},
         .data   = {
-            -1.f, -1.f, +1.f,
-            +1.f, -1.f, +1.f,
-            +1.f, +1.f, +1.f,
-            -1.f, +1.f, +1.f,
-                // Back face
-            -1.f, -1.f, -1.f,
-            +1.f, -1.f, -1.f,
-            +1.f, +1.f, -1.f,
-            -1.f, 1.f, -1.f,
-                // Left face
-            -1.f, -1.f, -1.f,
-            -1.f, -1.f, +1.f,
-            -1.f, +1.f, +1.f,
-            -1.f, +1.f, -1.f,
-                // Right face
-            +1.f, -1.f, -1.f,
-            +1.f, -1.f, +1.f,
-            +1.f, +1.f, +1.f,
-            +1.f, +1.f, -1.f,
-                // Top face
-            -1.f, +1.f, +1.f,
-            +1.f, +1.f, +1.f,
-            +1.f, +1.f, -1.f,
-            -1.f, +1.f, -1.f,
-                // Bottom face
-            -1.f, -1.f, +1.f,
-            +1.f, -1.f, +1.f,
-            +1.f, -1.f, -1.f,
-            -1.f, -1.f, -1.f,
+            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // Bas gauche
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f,  // Bas droite
+            0.5f,  0.5f, 0.0f,  1.0f, 1.0f,  // Haut droite
+           -0.5f,  0.5f, 0.0f,  0.0f, 1.0f   // Haut gauche
             
             // Position2D du 4ème sommet
         },
     }},
     .index_buffer   = {
-    // Front face
-    0, 1, 2, 2, 3, 0,
-    // Back face
-    4, 5, 6, 6, 7, 4,
-    // Left face
-    8, 9, 10, 10, 11, 8,
-    // Right face
-    12, 13, 14, 14, 15, 12,
-    // Top face
-    16, 17, 18, 18, 19, 16,
-    // Bottom face
-    20, 21, 22, 22, 23, 20,
+    0, 1, 2,
+    2, 3, 0
     },
 }};
 
