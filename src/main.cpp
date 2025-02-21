@@ -8,9 +8,9 @@ int main()
    
 
     // Initialisation
-    glEnable(GL_DEPTH_TEST);
     gl::init("TPs de Rendering"); // On crée une fenêtre et on choisit son nom
     gl::maximize_window(); // On peut la maximiser si on veut
+    glEnable(GL_DEPTH_TEST);
     gl::framebuffer_aspect_ratio();
     auto camera = gl::Camera{};
     gl::set_events_callbacks({camera.events_callbacks()});
@@ -89,8 +89,6 @@ int main()
         glm::mat4 const rotation = glm::rotate(glm::mat4{1.f}, gl::time_in_seconds() /*angle de la rotation*/, glm::vec3{0.f, 0.f, 1.f} /* axe autour duquel on tourne */);
         glm::mat4 const translation = glm::translate(glm::mat4{1.f}, glm::vec3{0.f, 1.f, 0.f} /* déplacement */);
         shader.set_uniform("model_matrix", translation * rotation);
-
-        
         // Rendu à chaque frame
     }
 }
