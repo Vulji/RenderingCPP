@@ -6,10 +6,13 @@ uniform float time_addition;
 uniform mat4 view_projection_matrix;
 uniform mat4 model_matrix;
 
+out vec3 vertex_position;
+
 void main()
 {
     vec3 position = in_position;
-
+    vertex_position = in_position;
+    
     mat4 model_view_projection_matrix =  view_projection_matrix *model_matrix;
 
     gl_Position = model_view_projection_matrix * vec4(in_position, 1.);
