@@ -8,6 +8,7 @@ int main()
    
 
     // Initialisation
+    glEnable(GL_DEPTH_TEST);
     gl::init("TPs de Rendering"); // On crée une fenêtre et on choisit son nom
     gl::maximize_window(); // On peut la maximiser si on veut
     gl::framebuffer_aspect_ratio();
@@ -23,35 +24,35 @@ int main()
     .vertex_buffers = {{
         .layout = {gl::VertexAttribute::Position3D{0}},
         .data   = {
-            -0.5f, -0.5f, +0.5f,
-            +0.5f, -0.5f, +0.5f,
-            +0.5f, +0.5f, +0.5f,
-            -0.5f, +0.5f, +0.5f,
+            -1.f, -1.f, +1.f,
+            +1.f, -1.f, +1.f,
+            +1.f, +1.f, +1.f,
+            -1.f, +1.f, +1.f,
                 // Back face
-            -0.5f, -0.5f, -0.5f,
-            +0.5f, -0.5f, -0.5f,
-            +0.5f, +0.5f, -0.5f,
-            -0.5f, +0.5f, -0.5f,
+            -1.f, -1.f, -1.f,
+            +1.f, -1.f, -1.f,
+            +1.f, +1.f, -1.f,
+            -1.f, 1.f, -1.f,
                 // Left face
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, +0.5f,
-            -0.5f, +0.5f, +0.5f,
-            -0.5f, +0.5f, -0.5f,
+            -1.f, -1.f, -1.f,
+            -1.f, -1.f, +1.f,
+            -1.f, +1.f, +1.f,
+            -1.f, +1.f, -1.f,
                 // Right face
-            +0.5f, -0.5f, -0.5f,
-            +0.5f, -0.5f, +0.5f,
-            +0.5f, +0.5f, +0.5f,
-            +0.5f, +0.5f, -0.5f,
+            +1.f, -1.f, -1.f,
+            +1.f, -1.f, +1.f,
+            +1.f, +1.f, +1.f,
+            +1.f, +1.f, -1.f,
                 // Top face
-            -0.5f, +0.5f, +0.5f,
-            +0.5f, +0.5f, +0.5f,
-            +0.5f, +0.5f, -0.5f,
-            -0.5f, +0.5f, -0.5f,
+            -1.f, +1.f, +1.f,
+            +1.f, +1.f, +1.f,
+            +1.f, +1.f, -1.f,
+            -1.f, +1.f, -1.f,
                 // Bottom face
-            -0.5f, -0.5f, +0.5f,
-            +0.5f, -0.5f, +0.5f,
-            +0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
+            -1.f, -1.f, +1.f,
+            +1.f, -1.f, +1.f,
+            +1.f, -1.f, -1.f,
+            -1.f, -1.f, -1.f,
             
             // Position2D du 4ème sommet
         },
@@ -75,7 +76,7 @@ int main()
     while (gl::window_is_open())
     {
         glClearColor(0.f, 0.f, 1.f, 1.f); // Choisis la couleur à utiliser. Les paramètres sont R, G, B, A avec des valeurs qui vont de 0 à 1
-        glClear(GL_COLOR_BUFFER_BIT); // Exécute concrètement l'action d'appliquer sur tout l'écran la couleur choisie au-dessus
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Exécute concrètement l'action d'appliquer sur tout l'écran la couleur choisie au-dessus
         
         shader.bind(); // On a besoin qu'un shader soit bind (i.e. "actif") avant de draw(). On en reparle dans la section d'après.
         shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
@@ -88,6 +89,8 @@ int main()
         glm::mat4 const rotation = glm::rotate(glm::mat4{1.f}, gl::time_in_seconds() /*angle de la rotation*/, glm::vec3{0.f, 0.f, 1.f} /* axe autour duquel on tourne */);
         glm::mat4 const translation = glm::translate(glm::mat4{1.f}, glm::vec3{0.f, 1.f, 0.f} /* déplacement */);
         shader.set_uniform("model_matrix", translation * rotation);
+
+        
         // Rendu à chaque frame
     }
 }
