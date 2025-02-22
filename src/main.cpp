@@ -29,9 +29,9 @@ auto const texture = gl::Texture{
     },
     gl::TextureOptions{
         .minification_filter  = gl::Filter::Linear, // Comment on va moyenner les pixels quand on voit l'image de loin ?
-        .magnification_filter = gl::Filter::NearestNeighbour, // Comment on va interpoler entre les pixels quand on zoom dans l'image ?
-        .wrap_x               = gl::Wrap::Repeat,   // Quelle couleur va-t-on lire si jamais on essaye de lire en dehors de la texture ?
-        .wrap_y               = gl::Wrap::Repeat,   // Idem, mais sur l'axe Y. En général on met le même wrap mode sur les deux axes.
+        .magnification_filter = gl::Filter::Linear, // Comment on va interpoler entre les pixels quand on zoom dans l'image ?
+        .wrap_x               = gl::Wrap::MirroredRepeat,   // Quelle couleur va-t-on lire si jamais on essaye de lire en dehors de la texture ?
+        .wrap_y               = gl::Wrap::MirroredRepeat,   // Idem, mais sur l'axe Y. En général on met le même wrap mode sur les deux axes.
     }
 };
 
@@ -39,17 +39,50 @@ auto const texture = gl::Texture{
     .vertex_buffers = {{
         .layout = {gl::VertexAttribute::Position3D{0},gl::VertexAttribute::UV{1}},
         .data   = {
-            -0.5f, -0.5f, 0.0f,  0.8f, 0.8f,  // Bas gauche
-            0.5f, -0.5f, 0.0f,   0.9f, 0.8f,  // Bas droite
-            0.5f,  0.5f, 0.0f,   0.9f,  0.9f,  // Haut droite
-           -0.5f,  0.5f, 0.0f,  0.8f,  0.9f   // Haut gauche
-            
-            // Position2D du 4ème sommet
+            -1.f, -1.f, +1.f, 0.f, 0.f,
+            +1.f, -1.f, +1.f, 1.f, 0.f,
+            +1.f, +1.f, +1.f, 1.f, 1.f,
+            -1.f, +1.f, +1.f, 0.f, 1.f,
+
+            -1.f, -1.f, -1.f, 0.f, 0.f,
+            +1.f, -1.f, -1.f, 1.f, 0.f,
+            +1.f, +1.f, -1.f, 1.f, 1.f,
+            -1.f, +1.f, -1.f, 0.f, 1.f,
+
+            -1.f, -1.f, -1.f, 0.f, 0.f,
+            -1.f, -1.f, +1.f, 1.f, 0.f,
+            -1.f, +1.f, +1.f, 1.f, 1.f,
+            -1.f, +1.f, -1.f, 0.f, 1.f,
+
+            +1.f, -1.f, -1.f, 0.f, 0.f,
+            +1.f, -1.f, +1.f, 1.f, 0.f,
+            +1.f, +1.f, +1.f, 1.f, 1.f,
+            +1.f, +1.f, -1.f, 0.f, 1.f,
+
+            -1.f, +1.f, +1.f, 0.f, 0.f,
+            +1.f, +1.f, +1.f, 1.f, 0.f,
+            +1.f, +1.f, -1.f, 1.f, 1.f,
+            -1.f, +1.f, -1.f, 0.f, 1.f,
+
+            -1.f, -1.f, +1.f, 0.f, 0.f,
+            +1.f, -1.f, +1.f, 1.f, 0.f,
+            +1.f, -1.f, -1.f, 1.f, 1.f,
+            -1.f, -1.f, -1.f, 0.f, 1.f
         },
     }},
     .index_buffer   = {
-    0, 1, 2,
-    2, 3, 0
+
+      0, 1, 2, 2, 3, 0,
+
+      4, 5, 6, 6, 7, 4,
+
+      8, 9, 10, 10, 11, 8,
+
+      12, 13, 14, 14, 15, 12,
+
+      16, 17, 18, 18, 19, 16,
+      
+      20, 21, 22, 22, 23, 20,
     },
 }};
 
