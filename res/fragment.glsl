@@ -9,6 +9,7 @@ in vec2 uv;
 
 uniform sampler2D my_texture;
 
+
 void main()
 {
     //out_color = vec4(uv.x, uv.y, 0., 1.);

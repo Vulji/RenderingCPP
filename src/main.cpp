@@ -5,8 +5,6 @@
 int main()
 {
 
-   
-
     // Initialisation
     gl::init("TPs de Rendering"); // On crée une fenêtre et on choisit son nom
     gl::maximize_window(); // On peut la maximiser si on veut
@@ -53,6 +51,12 @@ int main()
     .vertex   = gl::ShaderSource::File{"res/vertex.glsl"},
     .fragment = gl::ShaderSource::File{"res/fragment.glsl"},
 }};
+
+auto const screen_shader = gl::Shader{{
+    .vertex   = gl::ShaderSource::File{"res/screen_vertex.glsl"},
+    .fragment = gl::ShaderSource::File{"res/screen_fragment.glsl"},
+}};
+
 
 auto const texture = gl::Texture{
     gl::TextureSource::File{ // Peut être un fichier, ou directement un tableau de pixels
@@ -123,24 +127,48 @@ auto const texture = gl::Texture{
     while (gl::window_is_open())
     {
         render_target.render([&]() {
-        glClearColor(1.f, 0.f, 0.f, 1.f); // Dessine du rouge, non pas à l'écran, mais sur notre render target
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        shader.bind(); // On a besoin qu'un shader soit bind (i.e. "actif") avant de draw(). On en reparle dans la section d'après.
-        shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
-        shader.set_uniform("time_addition", gl::time_in_seconds());
-        shader.set_uniform("my_texture", texture);
-        
-        glm::mat4 const view_matrix = camera.view_matrix();
-        glm::mat4 const projection_matrix = glm::infinitePerspective(1.f /*field of view in radians*/, gl::framebuffer_aspect_ratio() /*aspect ratio*/, 0.001f /*near plane*/);
-        shader.set_uniform("view_projection_matrix", projection_matrix*view_matrix);
-        glm::mat4 const rotation = glm::rotate(glm::mat4{1.f}, gl::time_in_seconds() /*angle de la rotation*/, glm::vec3{0.f, 0.f, 1.f} /* axe autour duquel on tourne */);
-        glm::mat4 const translation = glm::translate(glm::mat4{1.f}, glm::vec3{0.f, 1.f, 0.f} /* déplacement */);
-        shader.set_uniform("model_matrix", translation * rotation);
-        // Rendu à chaque frame
-        rectangle_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
+            glClearColor(1.f, 0.f, 0.f, 1.f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+            shader.bind();
+            shader.set_uniform("aspect_ratio", gl::framebuffer_aspect_ratio());
+            shader.set_uniform("time_addition", gl::time_in_seconds());
+            shader.set_uniform("my_texture", texture);
+    
+            glm::mat4 const view_matrix = camera.view_matrix();
+            glm::mat4 const projection_matrix = glm::infinitePerspective(1.f, gl::framebuffer_aspect_ratio(), 0.001f);
+            shader.set_uniform("view_projection_matrix", projection_matrix * view_matrix);
+    
+            glm::mat4 const rotation = glm::rotate(glm::mat4{1.f}, gl::time_in_seconds(), glm::vec3{0.f, 0.f, 1.f});
+            glm::mat4 const translation = glm::translate(glm::mat4{1.f}, glm::vec3{0.f, 1.f, 0.f});
+            shader.set_uniform("model_matrix", translation * rotation);
+    
+            rectangle_mesh.draw();
 
         
     });
+
+    screen_shader.bind();
+
+        auto const screen_mesh = gl::Mesh{{
+            .vertex_buffers = {{
+                .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
+                .data   = {
+                    -1.f, -1.f, 0.f, 0.f,
+                     1.f, -1.f, 1.f, 0.f,
+                     1.f,  1.f, 1.f, 1.f,
+                    -1.f,  1.f, 0.f, 1.f
+                },
+            }},
+            .index_buffer = {0, 1, 2, 2, 3, 0},
+        }};
+       
+        glDisable(GL_DEPTH_TEST); 
+        screen_shader.bind();
+        screen_shader.set_uniform("my_texture", render_target.color_texture(0));
+        screen_mesh.draw();
+    
+        glEnable(GL_DEPTH_TEST); 
+
     }
 }
