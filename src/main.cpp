@@ -30,8 +30,8 @@ auto const texture = gl::Texture{
     gl::TextureOptions{
         .minification_filter  = gl::Filter::Linear, // Comment on va moyenner les pixels quand on voit l'image de loin ?
         .magnification_filter = gl::Filter::Linear, // Comment on va interpoler entre les pixels quand on zoom dans l'image ?
-        .wrap_x               = gl::Wrap::Repeat,   // Quelle couleur va-t-on lire si jamais on essaye de lire en dehors de la texture ?
-        .wrap_y               = gl::Wrap::Repeat,   // Idem, mais sur l'axe Y. En général on met le même wrap mode sur les deux axes.
+        .wrap_x               = gl::Wrap::MirroredRepeat,   // Quelle couleur va-t-on lire si jamais on essaye de lire en dehors de la texture ?
+        .wrap_y               = gl::Wrap::MirroredRepeat,   // Idem, mais sur l'axe Y. En général on met le même wrap mode sur les deux axes.
     }
 };
 
@@ -39,10 +39,10 @@ auto const texture = gl::Texture{
     .vertex_buffers = {{
         .layout = {gl::VertexAttribute::Position3D{0},gl::VertexAttribute::UV{1}},
         .data   = {
-            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // Bas gauche
-            0.5f, -0.5f, 0.0f,  1.0f, 0.0f,  // Bas droite
-            0.5f,  0.5f, 0.0f,  1.0f, 1.0f,  // Haut droite
-           -0.5f,  0.5f, 0.0f,  0.0f, 1.0f   // Haut gauche
+            -0.5f, -0.5f, 0.0f,  -1.0f, -1.0f,  // Bas gauche
+            0.5f, -0.5f, 0.0f,   2.0f, -1.0f,  // Bas droite
+            0.5f,  0.5f, 0.0f,   2.0f,  2.0f,  // Haut droite
+           -0.5f,  0.5f, 0.0f,  -1.0f,  2.0f   // Haut gauche
             
             // Position2D du 4ème sommet
         },
