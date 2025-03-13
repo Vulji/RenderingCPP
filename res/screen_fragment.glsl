@@ -6,6 +6,7 @@ in vec2 uv;
 uniform sampler2D my_texture;
 
 void main() {
-    vec4 tex_color = texture(my_texture, uv);
-    out_color = vec4(tex_color.r, 0.0, 0.0, tex_color.a);
+    out_color = texture(my_texture, uv);
+    //vec4 tex_color = texture(my_texture, uv);
+    //out_color = vec4(tex_color.r, 0.0, 0.0, tex_color.a);
 }
