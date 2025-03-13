@@ -12,6 +12,7 @@ uniform sampler2D my_texture;
 
 
 
+
 void main()
 {
 vec3 normalized_normals = normalize(normals);
