@@ -1,6 +1,50 @@
 #include "opengl-framework/opengl-framework.hpp" // Inclue la librairie qui va nous servir à faire du rendu
+#include <iostream>
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "tiny_obj_loader.h"
+
+
+auto load_mesh(std::filesystem::path const& path) -> gl::Mesh
+{
+    // On lit le fichier avec tinyobj
+    auto reader = tinyobj::ObjReader{};
+    reader.ParseFromFile(gl::make_absolute_path(path).string(), {});
+
+    if (!reader.Error().empty())
+        throw std::runtime_error("Failed to read 3D model:\n" + reader.Error());
+    if (!reader.Warning().empty())
+        std::cout << "Warning while reading 3D model:\n" + reader.Warning();
+
+    // On met tous les attributs dans un tableau
+    auto vertices = std::vector<float>{};
+    for (auto const& shape : reader.GetShapes())
+    {
+        for (auto const& idx : shape.mesh.indices)
+        {
+            // Position
+            vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 0]);
+            vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 1]);
+            vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 2]);
+
+            // UV
+            vertices.push_back(reader.GetAttrib().texcoords[2 * idx.texcoord_index + 0]);
+            vertices.push_back(reader.GetAttrib().texcoords[2 * idx.texcoord_index + 1]);
+
+            // Normale
+            vertices.push_back(reader.GetAttrib().normals[3 * idx.normal_index + 0]);
+            vertices.push_back(reader.GetAttrib().normals[3 * idx.normal_index + 1]);
+            vertices.push_back(reader.GetAttrib().normals[3 * idx.normal_index + 2]);
+        };
+    }
+
+    return gl::Mesh{{
+        .vertex_buffers = {{
+            .layout = {gl::VertexAttribute::Position3D{0}, gl::VertexAttribute::UV{1}, gl::VertexAttribute::Normal3D{2}},
+            .data   = vertices,
+        }},
+    }};
+}
 
 int main()
 {
@@ -11,6 +55,8 @@ int main()
     glEnable(GL_DEPTH_TEST);
     gl::framebuffer_aspect_ratio();
     auto camera = gl::Camera{};
+
+
     
     auto render_target = gl::RenderTarget{gl::RenderTarget_Descriptor{
         .width          = gl::framebuffer_width_in_pixels(),
@@ -54,13 +100,13 @@ int main()
 
 auto const screen_shader = gl::Shader{{
     .vertex   = gl::ShaderSource::File{"res/screen_vertex.glsl"},
-    .fragment = gl::ShaderSource::File{"res/screen_fragment.glsl"},
+    .fragment = gl::ShaderSource::File{"res/screen_fragment.glsl"}
 }};
 
 
 auto const texture = gl::Texture{
     gl::TextureSource::File{ // Peut être un fichier, ou directement un tableau de pixels
-        .path           = "res/texture.png",
+        .path           = "res/texture1.png",
         .flip_y         = true, // Il n'y a pas de convention universelle sur la direction de l'axe Y. Les fichiers (.png, .jpeg) utilisent souvent une direction différente de celle attendue par OpenGL. Ce booléen flip_y est là pour inverser la texture si jamais elle n'apparaît pas dans le bon sens.
         .texture_format = gl::InternalFormat::RGBA8, // Format dans lequel la texture sera stockée. On pourrait par exemple utiliser RGBA16 si on voulait 16 bits par canal de couleur au lieu de 8. (Mais ça ne sert à rien dans notre cas car notre fichier ne contient que 8 bits par canal, donc on ne gagnerait pas de précision). On pourrait aussi stocker en RGB8 si on ne voulait pas de canal alpha. On utilise aussi parfois des textures avec un seul canal (R8) pour des usages spécifiques.
     },
@@ -73,56 +119,8 @@ auto const texture = gl::Texture{
 };
 
 
-   auto const rectangle_mesh = gl::Mesh{{
-    .vertex_buffers = {{
-        .layout = {gl::VertexAttribute::Position3D{0},gl::VertexAttribute::UV{1}},
-        .data   = {
-            -1.f, -1.f, +1.f, 0.f, 0.f,
-            +1.f, -1.f, +1.f, 1.f, 0.f,
-            +1.f, +1.f, +1.f, 1.f, 1.f,
-            -1.f, +1.f, +1.f, 0.f, 1.f,
-
-            -1.f, -1.f, -1.f, 0.f, 0.f,
-            +1.f, -1.f, -1.f, 1.f, 0.f,
-            +1.f, +1.f, -1.f, 1.f, 1.f,
-            -1.f, +1.f, -1.f, 0.f, 1.f,
-
-            -1.f, -1.f, -1.f, 0.f, 0.f,
-            -1.f, -1.f, +1.f, 1.f, 0.f,
-            -1.f, +1.f, +1.f, 1.f, 1.f,
-            -1.f, +1.f, -1.f, 0.f, 1.f,
-
-            +1.f, -1.f, -1.f, 0.f, 0.f,
-            +1.f, -1.f, +1.f, 1.f, 0.f,
-            +1.f, +1.f, +1.f, 1.f, 1.f,
-            +1.f, +1.f, -1.f, 0.f, 1.f,
-
-            -1.f, +1.f, +1.f, 0.f, 0.f,
-            +1.f, +1.f, +1.f, 1.f, 0.f,
-            +1.f, +1.f, -1.f, 1.f, 1.f,
-            -1.f, +1.f, -1.f, 0.f, 1.f,
-
-            -1.f, -1.f, +1.f, 0.f, 0.f,
-            +1.f, -1.f, +1.f, 1.f, 0.f,
-            +1.f, -1.f, -1.f, 1.f, 1.f,
-            -1.f, -1.f, -1.f, 0.f, 1.f
-        },
-    }},
-    .index_buffer   = {
-
-      0, 1, 2, 2, 3, 0,
-
-      4, 5, 6, 6, 7, 4,
-
-      8, 9, 10, 10, 11, 8,
-
-      12, 13, 14, 14, 15, 12,
-
-      16, 17, 18, 18, 19, 16,
-
-      20, 21, 22, 22, 23, 20,
-    },
-}};
+   
+    auto const rectangle_mesh = load_mesh("res/fourareen.obj");
 
     while (gl::window_is_open())
     {
@@ -147,6 +145,9 @@ auto const texture = gl::Texture{
 
         
     });
+
+
+
 
     screen_shader.bind();
 
