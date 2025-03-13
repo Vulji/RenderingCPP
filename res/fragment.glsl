@@ -11,8 +11,18 @@ in vec2 uv;
 uniform sampler2D my_texture;
 
 
+
 void main()
 {
-    out_color = vec4(normals.x, normals.y, normals.z, 1.);
-    texture_color = texture(my_texture, uv);
+vec3 normalized_normals = normalize(normals);
+
+const vec3 light_direction = normalize(vec3(0.2, 0.3, -1.0));
+
+float dotProd = dot(normalized_normals, light_direction);
+
+vec4 texture_color = texture(my_texture, uv);
+
+vec3 diffuse = texture_color.rgb * dotProd;
+
+out_color = vec4(diffuse, texture_color.a);
 }

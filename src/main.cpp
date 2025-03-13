@@ -132,6 +132,7 @@ auto const texture = gl::Texture{
             shader.set_uniform("aspect_ratio", gl::framebuffer_aspect_ratio());
             shader.set_uniform("time_addition", gl::time_in_seconds());
             shader.set_uniform("my_texture", texture);
+            
     
             glm::mat4 const view_matrix = camera.view_matrix();
             glm::mat4 const projection_matrix = glm::infinitePerspective(1.f, gl::framebuffer_aspect_ratio(), 0.001f);
