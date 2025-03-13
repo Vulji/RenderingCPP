@@ -22,7 +22,9 @@ const vec3 pointlight_position = vec3(0.2, 0.2, 0.2);
 
 vec3 pointlight_direction = normalize((pointlight_position - vertex_position))/pow(distance(pointlight_position, vertex_position),2);
 
-float dotProd = max(dot(normalized_normals, pointlight_direction), 0.0) +0.3;
+float intensity = 5;
+
+float dotProd = (max(dot(normalized_normals, pointlight_direction), 0.0) +0.3) * intensity;
 
 //float dotProd = max(dot(normalized_normals, light_direction), 0.0) +0.3;
 
