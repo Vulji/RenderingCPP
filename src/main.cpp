@@ -106,7 +106,7 @@ auto const screen_shader = gl::Shader{{
 
 auto const texture = gl::Texture{
     gl::TextureSource::File{ // Peut être un fichier, ou directement un tableau de pixels
-        .path           = "res/fourareen2K_albedo.jpg",
+        .path           = "res/texture1.png",
         .flip_y         = true, // Il n'y a pas de convention universelle sur la direction de l'axe Y. Les fichiers (.png, .jpeg) utilisent souvent une direction différente de celle attendue par OpenGL. Ce booléen flip_y est là pour inverser la texture si jamais elle n'apparaît pas dans le bon sens.
         .texture_format = gl::InternalFormat::RGBA8, // Format dans lequel la texture sera stockée. On pourrait par exemple utiliser RGBA16 si on voulait 16 bits par canal de couleur au lieu de 8. (Mais ça ne sert à rien dans notre cas car notre fichier ne contient que 8 bits par canal, donc on ne gagnerait pas de précision). On pourrait aussi stocker en RGB8 si on ne voulait pas de canal alpha. On utilise aussi parfois des textures avec un seul canal (R8) pour des usages spécifiques.
     },
@@ -120,7 +120,7 @@ auto const texture = gl::Texture{
 
 
    
-    auto const rectangle_mesh = load_mesh("res/fourareen.obj");
+    auto const rectangle_mesh = load_mesh("res/RebootRobot.obj");
 
     while (gl::window_is_open())
     {
