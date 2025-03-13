@@ -24,8 +24,8 @@ auto load_mesh(std::filesystem::path const& path) -> gl::Mesh
         {
             // Position
             vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 0]);
-            vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 1]);
             vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 2]);
+            vertices.push_back(reader.GetAttrib().vertices[3 * idx.vertex_index + 1]);
 
             // UV
             vertices.push_back(reader.GetAttrib().texcoords[2 * idx.texcoord_index + 0]);
