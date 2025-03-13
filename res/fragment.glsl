@@ -23,6 +23,8 @@ vec3 pointlight_position = vec3(0.2, 0.2, 0.2);
 
 vec3 pointlight_direction = normalize((pointlight_position - vertex_position))/pow(distance(pointlight_position, vertex_position),2);
 
+vec3 pointlight_color = vec3(0.35, 0.0, 0.91);
+
 float intensity = .8;
 
 float dotProd = (max(dot(normalized_normals, pointlight_direction), 0.0) +0.3) * intensity;
@@ -33,5 +35,5 @@ vec4 texture_color = texture(my_texture, uv);
 
 vec3 diffuse = texture_color.rgb * dotProd;
 
-out_color = vec4(diffuse, texture_color.a);
+out_color = vec4(diffuse*pointlight_color, texture_color.a);
 }
