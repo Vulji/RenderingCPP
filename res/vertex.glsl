@@ -19,8 +19,7 @@ void main()
     normals = in_normal;
     uv = aTexCoord;
     
-    
-    mat4 model_view_projection_matrix =  view_projection_matrix /*model_matrix*/;
+    mat4 model_view_projection_matrix =  view_projection_matrix * model_matrix;
 
     gl_Position = model_view_projection_matrix * vec4(in_position, 1.);
 }
