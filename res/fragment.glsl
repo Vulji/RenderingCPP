@@ -5,6 +5,7 @@ out vec4 texture_color;
 
 
 in vec3 vertex_position;
+in vec3 normals;
 in vec2 uv;
 
 uniform sampler2D my_texture;
@@ -12,6 +13,6 @@ uniform sampler2D my_texture;
 
 void main()
 {
-    //out_color = vec4(uv.x, uv.y, 0., 1.);
+    out_color = vec4(normals.x, normals.y, normals.z, 1.);
     texture_color = texture(my_texture, uv);
 }
