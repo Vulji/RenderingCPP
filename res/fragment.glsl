@@ -18,7 +18,13 @@ vec3 normalized_normals = normalize(normals);
 
 const vec3 light_direction = normalize(vec3(0.2, 0.3, -1.0));
 
-float dotProd = max(dot(normalized_normals, light_direction), 0.0) +0.3;
+const vec3 pointlight_position = vec3(0.2, 0.2, 0.2);
+
+vec3 pointlight_direction = normalize((pointlight_position - vertex_position))/pow(distance(pointlight_position, vertex_position),2);
+
+float dotProd = max(dot(normalized_normals, pointlight_direction), 0.0) +0.3;
+
+//float dotProd = max(dot(normalized_normals, light_direction), 0.0) +0.3;
 
 vec4 texture_color = texture(my_texture, uv);
 
